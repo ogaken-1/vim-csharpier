@@ -5,4 +5,4 @@ WIP
 A Vim/Neovim plugin to use [csharpier](https://github.com/belav/csharpier)
 with `--pipe-multiple-files` flag.
 
-See <./doc/csharpier.txt> for details.
+See [doc](./doc/csharpier.txt) for details.
