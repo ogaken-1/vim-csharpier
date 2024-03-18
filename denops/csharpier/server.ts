@@ -1,6 +1,7 @@
 import { assert, is } from "https://deno.land/x/unknownutil@v3.17.0/mod.ts";
+import { LSP } from "https://deno.land/x/denops_lsputil@v0.9.4/deps.ts";
 
-type Result = { ok: true; text: string[] } | { ok: false };
+type Result = { ok: true; textEdits: LSP.TextEdit[] } | { ok: false };
 
 type RequestBody = {
   fileContents: string;
@@ -54,9 +55,22 @@ export class Server implements Disposable {
     const responseBody: unknown = await response.arrayBuffer()
       .then((buffer) => JSON.parse(this.#decoder.decode(buffer)));
     assert(responseBody, isResponseBody);
+    const textEdit: LSP.TextEdit = {
+      range: {
+        start: {
+          line: 0,
+          character: 0,
+        },
+        end: {
+          line: content.length,
+          character: content[content.length - 1].length,
+        },
+      },
+      newText: responseBody.formattedFile,
+    };
     return {
       ok: true,
-      text: responseBody.formattedFile.split("\n"),
+      textEdits: [textEdit],
     };
   }
 }
