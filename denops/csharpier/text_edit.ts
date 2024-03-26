@@ -1,6 +1,9 @@
 import { LSP } from "https://deno.land/x/denops_lsputil@v0.9.4/deps.ts";
 
 export function textEdits(from: string, to: string): LSP.TextEdit[] {
+  if (from === to) {
+    return [];
+  }
   const textEdit: LSP.TextEdit = {
     range: {
       start: {
