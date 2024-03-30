@@ -23,7 +23,12 @@ REQUIREMENTS                                          *csharpier-requirements*
 ==============================================================================
 FUNCTIONS                                                *csharpier-functions*
 
-csharpier#formatfile([{bufnr}])                       *csharpier#formatFile()*
+csharpier#formatfile([{bufnr}])                       *csharpier#formatfile()*
+
+	Format {bufnr}.
+	If {bufnr} is omitted the current buffer is used.
+
+csharpier#formatfile_sync([{bufnr}])             *csharpier#formatfile_sync()*
 
 	Format {bufnr}.
 	If {bufnr} is omitted the current buffer is used.
