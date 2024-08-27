@@ -13,16 +13,23 @@ const isResponseBody = is.ObjectOf({
   formattedFile: is.String,
 });
 
+const findAvailablePort = (): number => {
+  const listener = Deno.listen({ port: 0 });
+  const port = listener.addr.port;
+  listener.close();
+  return port;
+};
+
 export class Server implements Disposable {
-  #port: string;
+  #port: number;
   #process: Deno.ChildProcess;
   #decoder: TextDecoder;
 
   constructor(cwd: string) {
-    this.#port = "44894";
+    this.#port = findAvailablePort();
     this.#decoder = new TextDecoder();
     this.#process = new Deno.Command("dotnet", {
-      args: ["csharpier", "--server", "--server-port", this.#port],
+      args: ["csharpier", "--server", "--server-port", this.#port.toString()],
       stdin: "null",
       stdout: "piped",
       env: {
