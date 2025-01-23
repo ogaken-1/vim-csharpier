@@ -29,7 +29,7 @@ export class Server implements Disposable {
     this.#port = findAvailablePort();
     this.#decoder = new TextDecoder();
     this.#process = new Deno.Command("dotnet", {
-      args: ["csharpier", "--server", "--server-port", this.#port.toString()],
+      args: ["csharpier", "server", "--server-port", this.#port.toString()],
       stdin: "null",
       stdout: "piped",
       env: {
