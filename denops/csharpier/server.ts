@@ -3,6 +3,7 @@ import { LSP } from "https://deno.land/x/denops_lsputil@v0.9.4/deps.ts";
 import { textEdits } from "./text_edit.ts";
 import { Result } from "./types.ts";
 import { parseVersion } from "./version.ts";
+import { reduce } from "./stream.ts";
 
 type TextEdits = { textEdits: LSP.TextEdit[] };
 
@@ -22,6 +23,8 @@ const findAvailablePort = (): number => {
   return port;
 };
 
+const decoderStream = new TextDecoderStream();
+
 const isStableVersion = async (cwd: string): Promise<boolean> => {
   const versionRequest = new Deno.Command("dotnet", {
     args: ["csharpier", "--version"],
@@ -35,18 +38,11 @@ const isStableVersion = async (cwd: string): Promise<boolean> => {
   if (!await versionRequest.status) {
     return false;
   }
-  const reader = versionRequest.stdout.pipeThrough(new TextDecoderStream())
-    .getReader();
-  let outputText = "";
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) {
-      break;
-    }
-    if (value) {
-      outputText += value;
-    }
-  }
+  const outputText = await reduce(
+    versionRequest.stdout.pipeThrough(decoderStream),
+    (accumulator, current) => accumulator + current,
+    "",
+  );
   const result = parseVersion(outputText.trim());
   return result.ok ? (result.major >= 1) : false;
 };
