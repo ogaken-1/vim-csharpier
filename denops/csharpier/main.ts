@@ -1,5 +1,5 @@
 import { Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
-import { Server } from "./server.ts";
+import { resourceReady, Server } from "./server.ts";
 import * as vim from "https://deno.land/x/denops_std@v6.4.0/function/mod.ts";
 import { assert, is } from "https://deno.land/x/unknownutil@v3.17.0/mod.ts";
 import { applyTextEdits } from "https://deno.land/x/denops_lsputil@v0.9.4/mod.ts";
@@ -16,6 +16,9 @@ export function main(denops: Denops) {
       const cwd = await vim.getcwd(denops);
       const server = denops.context[cwd];
       if (server != null) {
+        return;
+      }
+      if (!await resourceReady()) {
         return;
       }
       denops.context[cwd] = new Server(cwd);

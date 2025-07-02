@@ -47,6 +47,37 @@ const isStableVersion = async (cwd: string): Promise<boolean> => {
   return result.ok ? (result.major >= 1) : false;
 };
 
+export const resourceReady = async (): Promise<boolean> => {
+  const dotnetOk = async () => {
+    try {
+      const dotnet = new Deno.Command("dotnet", {
+        args: ["--version"],
+        stdout: "null",
+        stderr: "null",
+      }).spawn();
+      await dotnet.output();
+      return (await dotnet.status).success;
+    } catch {
+      return false;
+    }
+  };
+  const csharpierOk = async () => {
+    try {
+      const csharpier = new Deno.Command("dotnet", {
+        args: ["csharpier", "--version"],
+        stdout: "null",
+        stderr: "null",
+      })
+        .spawn();
+      await csharpier.output();
+      return (await csharpier.status).success;
+    } catch {
+      return false;
+    }
+  };
+  return await dotnetOk() && await csharpierOk();
+};
+
 export class Server implements Disposable {
   #port: number;
   #process: Promise<Deno.ChildProcess>;
