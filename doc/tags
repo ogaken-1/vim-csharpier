@@ -1,5 +1,8 @@
-:Csharpier	csharpier.txt	/*:Csharpier*
-csharpier-commands	csharpier.txt	/*csharpier-commands*
+csharpier#formatfile()	csharpier.txt	/*csharpier#formatfile()*
+csharpier#formatfile_sync()	csharpier.txt	/*csharpier#formatfile_sync()*
 csharpier-features	csharpier.txt	/*csharpier-features*
+csharpier-functions	csharpier.txt	/*csharpier-functions*
+csharpier-options	csharpier.txt	/*csharpier-options*
 csharpier-requirements	csharpier.txt	/*csharpier-requirements*
 csharpier.txt	csharpier.txt	/*csharpier.txt*
+g:csharpier_command	csharpier.txt	/*g:csharpier_command*
