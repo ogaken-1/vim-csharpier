@@ -1,4 +1,4 @@
-import { assert, is } from "https://deno.land/x/unknownutil@v3.17.0/mod.ts";
+import { assert, is } from "jsr:@core/unknownutil@4.3.0";
 import { LSP } from "https://deno.land/x/denops_lsputil@v0.9.4/deps.ts";
 import { textEdits } from "./text_edit.ts";
 import { Result } from "./types.ts";

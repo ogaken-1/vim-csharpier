@@ -1,5 +1,5 @@
 import { Result } from "./types.ts";
-import { ensure, is } from "https://deno.land/x/unknownutil@v3.17.0/mod.ts";
+import { as, ensure, is } from "jsr:@core/unknownutil@4.3.0";
 
 export type Version = {
   major: number;
@@ -11,7 +11,7 @@ const isVersion = is.ObjectOf({
   major: is.String,
   minor: is.String,
   patch: is.String,
-  modifier: is.OptionalOf(is.String),
+  modifier: as.Optional(is.String),
 });
 
 export function parseVersion(version: string): Result<Version> {

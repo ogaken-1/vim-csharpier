@@ -1,11 +1,11 @@
 import { Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
 import { resourceReady, Server } from "./server.ts";
-import * as vim from "https://deno.land/x/denops_std@v6.4.0/function/mod.ts";
-import { assert, is } from "https://deno.land/x/unknownutil@v3.17.0/mod.ts";
+import * as vim from "jsr:@denops/std@8.1.0/function";
+import { as, assert, is } from "jsr:@core/unknownutil@4.3.0";
 import { applyTextEdits } from "https://deno.land/x/denops_lsputil@v0.9.4/mod.ts";
 
 const isContext = is.RecordOf(
-  is.OptionalOf((x): x is Server => x instanceof Server),
+  as.Optional((x): x is Server => x instanceof Server),
   is.String,
 );
 
