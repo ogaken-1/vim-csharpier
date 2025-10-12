@@ -25,9 +25,9 @@ const findAvailablePort = (): number => {
 
 const decoderStream = new TextDecoderStream();
 
-const isStableVersion = async (cwd: string): Promise<boolean> => {
-  const versionRequest = new Deno.Command("dotnet", {
-    args: ["csharpier", "--version"],
+const isStableVersion = async (cmd: string, cwd: string): Promise<boolean> => {
+  const versionRequest = new Deno.Command(cmd, {
+    args: ["--version"],
     stdin: "null",
     stdout: "piped",
     env: {
@@ -47,24 +47,11 @@ const isStableVersion = async (cwd: string): Promise<boolean> => {
   return result.ok ? (result.major >= 1) : false;
 };
 
-export const resourceReady = async (): Promise<boolean> => {
-  const dotnetOk = async () => {
-    try {
-      const dotnet = new Deno.Command("dotnet", {
-        args: ["--version"],
-        stdout: "null",
-        stderr: "null",
-      }).spawn();
-      await dotnet.output();
-      return (await dotnet.status).success;
-    } catch {
-      return false;
-    }
-  };
+export const resourceReady = async (cmd: string): Promise<boolean> => {
   const csharpierOk = async () => {
     try {
-      const csharpier = new Deno.Command("dotnet", {
-        args: ["csharpier", "--version"],
+      const csharpier = new Deno.Command(cmd, {
+        args: ["--version"],
         stdout: "null",
         stderr: "null",
       })
@@ -75,7 +62,7 @@ export const resourceReady = async (): Promise<boolean> => {
       return false;
     }
   };
-  return await dotnetOk() && await csharpierOk();
+  return await csharpierOk();
 };
 
 export class Server implements Disposable {
@@ -83,17 +70,17 @@ export class Server implements Disposable {
   #process: Promise<Deno.ChildProcess>;
   #decoder: TextDecoder;
 
-  constructor(cwd: string) {
+  constructor(cmd: string, cwd: string) {
     this.#port = findAvailablePort();
     this.#decoder = new TextDecoder();
-    this.#process = isStableVersion(cwd).then((stable) => {
+    this.#process = isStableVersion(cmd, cwd).then((stable) => {
       const args = [
         stable ? "server" : "--server",
         "--server-port",
         this.#port.toString(),
       ];
-      return new Deno.Command("dotnet", {
-        args: ["csharpier", ...args],
+      return new Deno.Command(cmd, {
+        args: args,
         stdin: "null",
         stdout: "piped",
         env: {

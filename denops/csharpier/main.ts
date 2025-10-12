@@ -1,7 +1,8 @@
 import { Denops } from "https://deno.land/x/denops_core@v6.0.5/mod.ts";
 import { resourceReady, Server } from "./server.ts";
 import * as vim from "jsr:@denops/std@8.1.0/function";
-import { as, assert, is } from "jsr:@core/unknownutil@4.3.0";
+import { g } from "jsr:@denops/std@8.1.0/variable";
+import { as, assert, ensure, is } from "jsr:@core/unknownutil@4.3.0";
 import { applyTextEdits } from "https://deno.land/x/denops_lsputil@v0.9.4/mod.ts";
 
 const isContext = is.RecordOf(
@@ -18,10 +19,12 @@ export function main(denops: Denops) {
       if (server != null) {
         return;
       }
-      if (!await resourceReady()) {
+      const cmd = ensure(await g.get(denops, "csharpier_command"), is.String) ??
+        "dotnet-csharpier";
+      if (!await resourceReady(cmd)) {
         return;
       }
-      denops.context[cwd] = new Server(cwd);
+      denops.context[cwd] = new Server(cmd, cwd);
     },
     format: async (bufnr: unknown): Promise<void> => {
       assert(denops.context, isContext);

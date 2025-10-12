@@ -21,6 +21,15 @@ REQUIREMENTS                                          *csharpier-requirements*
 <
 
 ==============================================================================
+OPTIONS                                                    *csharpier-options*
+
+*g:csharpier_command*
+
+	Set to specify csharpier executable in your environment.
+
+	Default: "dotnet-csharpier"
+
+==============================================================================
 FUNCTIONS                                                *csharpier-functions*
 
 csharpier#formatfile([{bufnr}])                       *csharpier#formatfile()*
