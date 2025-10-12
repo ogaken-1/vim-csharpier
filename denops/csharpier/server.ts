@@ -12,9 +12,16 @@ type RequestBody = {
   fileName: string;
 };
 
-const isResponseBody = is.ObjectOf({
-  formattedFile: is.String,
-});
+const isResponseBody = is.UnionOf([
+  is.ObjectOf({
+    formattedFile: is.String,
+  }),
+  is.ObjectOf({
+    formattedFile: is.Nullish,
+    status: is.LiteralOf("Failed"),
+    errorMessage: is.String,
+  }),
+]);
 
 const findAvailablePort = (): number => {
   const listener = Deno.listen({ port: 0 });
@@ -113,14 +120,21 @@ export class Server implements Disposable {
     if (!response.ok) {
       return {
         ok: false,
+        message: "Cannot connect to csharpier server.",
       };
     }
-    const responseBody: unknown = await response.arrayBuffer()
-      .then((buffer) => JSON.parse(this.#decoder.decode(buffer)));
+    const buffer = await response.arrayBuffer();
+    const responseBody = JSON.parse(this.#decoder.decode(buffer)) as unknown;
     assert(responseBody, isResponseBody);
-    return {
-      ok: true,
-      textEdits: textEdits(content, responseBody.formattedFile),
-    };
+
+    return responseBody.formattedFile != null
+      ? {
+        ok: true,
+        textEdits: textEdits(content, responseBody.formattedFile),
+      }
+      : {
+        ok: false,
+        message: responseBody.errorMessage,
+      };
   }
 }

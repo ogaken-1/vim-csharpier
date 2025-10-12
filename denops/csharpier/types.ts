@@ -1,1 +1,3 @@
-export type Result<T extends object> = ({ ok: true } & T) | { ok: false };
+export type Result<T extends object> =
+  | ({ ok: true } & T)
+  | { ok: false; message: string };
