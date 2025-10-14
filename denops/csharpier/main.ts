@@ -23,8 +23,10 @@ export function main(denops: Denops) {
       if (server != null) {
         return;
       }
-      const cmd = ensure(await g.get(denops, "csharpier_command"), is.String) ??
-        "dotnet-csharpier";
+      const cmd = ensure(
+        await g.get(denops, "csharpier_command"),
+        is.UnionOf([is.Null, is.String]),
+      ) ?? "dotnet-csharpier";
       if (!await resourceReady(cmd)) {
         return;
       }
