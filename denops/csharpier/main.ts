@@ -20,7 +20,7 @@ export function main(denops: Denops) {
       const cmd = ensure(
         await g.get(denops, "csharpier_command"),
         is.UnionOf([is.Null, is.String]),
-      ) ?? "dotnet-csharpier";
+      ) ?? "csharpier";
       if (!await resourceReady(cmd)) {
         return;
       }
