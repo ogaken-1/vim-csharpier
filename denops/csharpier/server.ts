@@ -110,7 +110,7 @@ export class Server implements Disposable {
       fileContents: content,
       fileName: filePath,
     };
-    const response = await fetch(`http://localhost:${this.#port}/format`, {
+    const response = await fetch(`http://127.0.0.1:${this.#port}/format`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
@@ -120,7 +120,7 @@ export class Server implements Disposable {
     if (!response.ok) {
       return {
         ok: false,
-        message: "Cannot connect to csharpier server.",
+        message: `Cannot connect to csharpier server (${response.status}).`,
       };
     }
     const buffer = await response.arrayBuffer();
